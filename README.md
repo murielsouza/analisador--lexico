@@ -6,6 +6,6 @@
    * Centro Universitário Luterano de Palmas - CEULP/ULBRA
 
 ### bibliotecas
-[![mermaid](https://img.shields.io/badge/mermaid-8.3.1-yellowgreen.svg)]
-[![bootStrap](http://img.shields.io/badge/bootstrap-4.3.1-blues.svg)]
-[![jquery](https://img.shields.io/badge/jquery-3.3.1-oranges.svg)]
+![mermaid](https://img.shields.io/badge/mermaid-8.3.1-yellowgreen.svg)
+![bootStrap](http://img.shields.io/badge/bootstrap-4.3.1-blues.svg)
+![jquery](https://img.shields.io/badge/jquery-3.3.1-oranges.svg)
