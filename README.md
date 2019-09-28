@@ -5,7 +5,7 @@
    * Professor: [Msc. Jackson Gomes](https://github.com/jacksongomesbr)
    * Centro Universitário Luterano de Palmas - CEULP/ULBRA
    
-   ## versão completa acesse o brabch(https://github.com/murielsouza/analisador-lexico/tree/henrique):
+   ## versão completa acesse o [branch](https://github.com/murielsouza/analisador-lexico/tree/henrique):
 
 [![Branch Comleto](https://img.shields.io/badge/Branch%20Completo-CLIQUE%20AQUI-blue.svg)](https://github.com/murielsouza/analisador-lexico/tree/henrique)
 
