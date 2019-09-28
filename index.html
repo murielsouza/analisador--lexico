@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="pt_BR">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+    <title>Hello, world!</title>
+</head>
+<body class="text-center">
+<div class="container">
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <form>
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label for="inputData">Data</label>
+                        <input class="form-control" id="inputData" type="text" value="28/09/2019">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="inputTempo">Tempo</label>
+                        <select class="form-control" id="inputTempo">
+                            <option value="1">1 milissegundo</option>
+                            <option value="10">10 milissegundos</option>
+                            <option value="50">50 milissegundos</option>
+                            <option value="100">100 milissegundos</option>
+                            <option value="250">250 milissegundos</option>
+                            <option value="500">500 milissegundos</option>
+                            <option selected value="1000">1 segundo</option>
+                            <option value="2000">2 segundos</option>
+                            <option value="3000">3 segundos</option>
+                            <option value="4000">4 segundos</option>
+                            <option value="5000">5 segundos</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <button class="btn btn-primary" onclick="init()" style="margin-top: 1.8rem"
+                                type="button">
+                            Verificar
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script crossorigin="anonymous"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="node_modules/mermaid/dist/mermaid.min.js"></script>
+<script src="verificadorformula.js"></script>
+<script>
+  mermaid.initialize({startOnLoad: false});
+
+  var _tempo = 1000;
+
+  var _arrayDados = [];
+
+  var __formatoArvore = '';
+
+  var _arvore = null;
+  var _dadosArvore = '';
+  var _indiceAtual = 0;
+  var _temStyloErro = 0;
+
+  function reset() {
+    if (_indiceAtual > 0) {
+      removerArvore();
+    }
+    _tempo = parseInt($("#inputTempo").val());
+    _indiceAtual = 0;
+    _temStyloErro = 0;
+    _dadosArvore = 'graph TD\n';
+  }
+
+  function criaArvore(dados) {
+    _arvore = document.createElement('div');
+    _arvore.setAttribute("id", "arvore");
+    document.body.appendChild(_arvore, document.body.firstElementChild);
+    renderArvore(dados)
+  }
+
+  function renderArvore(dados) {
+    var insertSvg = function (svgCode, bindFunctions) {
+      _arvore.innerHTML = svgCode;
+    };
+    _arvore.innerHTML = mermaid.render("graphDiv", dados, insertSvg);
+  }
+
+  function removerArvore() {
+    _arvore.remove();
+  }
+
+  var executa_animacao = function () {
+    if (_indiceAtual >= _arrayDados.length || _temStyloErro > 1) {
+      _indiceAtual = 0;
+      _temStyloErro = 0;
+      return;
+    }
+
+    var auxItem = _arrayDados[_indiceAtual];
+    removerArvore();
+    _dadosArvore += '\n' + _arrayDados[_indiceAtual];
+    criaArvore(_dadosArvore);
+    if (auxItem[0] === 's') {
+      _temStyloErro += 1;
+    }
+    _indiceAtual += 1;
+    setTimeout(executa_animacao, _tempo);
+  };
+
+  function init() {
+    reset();
+    verificaData();
+    criaArvore(_dadosArvore);
+    executa_animacao();
+  }
+
+  function verificaData() {
+    var resposta = compilador($("#inputData").val());
+
+    __formatoArvore = 'root("Data")\n';
+
+    __formatoArvore += 'root-->Dia["Dia"]\n';
+
+    for (var i = 0; i < resposta.dados.dia.length; i++) {
+      if (resposta.dados.dia[i].erro) {
+        __formatoArvore += 'Dia-->N' + i + '["Número"]\n';
+        __formatoArvore += 'N' + i + '-. X .->N' + i + 'E(("' + resposta.dados.dia[i].numero + '"))\n';
+        __formatoArvore += 'style N' + i + 'E color:#fff, fill:#f44336,stroke:#f44336\n';
+        __formatoArvore += 'N' + i + 'E-.->N' + i + 'ED["' + resposta.dados.dia[i].msg + '!!!"]\n';
+        __formatoArvore += 'style N' + i + 'ED color:#fff, fill:#f44336,stroke:#f44336\n';
+      } else {
+        __formatoArvore += 'Dia-->N' + i + '["Número"]\n N' + i + '-->dd' + i + '(("' + resposta.dados.dia[i].numero + '"))\n';
+      }
+    }
+
+    if (resposta.dados.barra1.item.erro) {
+      __formatoArvore += 'root-. X .->B1(("' + resposta.dados.barra1.item.item + '"))\n';
+      __formatoArvore += 'style B1 color:#fff, fill:#f44336,stroke:#f44336\n';
+      __formatoArvore += 'B1-.->BE1["' + resposta.dados.barra1.item.msg + '!!!"]\n';
+      __formatoArvore += 'style BE1 color:#fff, fill:#f44336,stroke:#f44336\n';
+    } else {
+      __formatoArvore += 'root-->B1(("' + resposta.dados.barra1.item.item + '"))\n';
+    }
+
+    __formatoArvore += 'root-->M["Mês"]\n';
+
+    for (var m = 0; m < resposta.dados.mes.length; m++) {
+      if (resposta.dados.mes[m].erro) {
+        __formatoArvore += 'M-->M' + m + '["Número"]\n';
+        __formatoArvore += 'M' + m + '-. X .->M' + m + 'E(("' + resposta.dados.mes[m].numero + '"))\n';
+        __formatoArvore += 'style M' + m + 'E color:#fff, fill:#f44336,stroke:#f44336\n';
+        __formatoArvore += 'M' + m + 'E-.->M' + m + 'EM["' + resposta.dados.mes[m].msg + '!!!"]\n';
+        __formatoArvore += 'style M' + m + 'EM color:#fff, fill:#f44336,stroke:#f44336\n';
+      } else {
+        __formatoArvore += 'M-->M' + m + '["Número"]\nM' + m + '-->mm' + m + '(("' + resposta.dados.mes[m].numero + '"))\n';
+      }
+    }
+
+    if (resposta.dados.barra2.item.erro) {
+      __formatoArvore += 'root-. X .->B2(("' + resposta.dados.barra2.item.item + '"))\n';
+      __formatoArvore += 'style B2 color:#fff, fill:#f44336,stroke:#f44336\n';
+      __formatoArvore += 'B2-.->B2E1["' + resposta.dados.barra2.item.msg + '!!!"]\n';
+      __formatoArvore += 'style B2E1 color:#fff, fill:#f44336,stroke:#f44336\n';
+    } else {
+      __formatoArvore += 'root-->B2(("' + resposta.dados.barra2.item.item + '"))\n';
+    }
+
+    __formatoArvore += 'root-->A["Ano"]\n';
+
+    for (var a = 0; a < resposta.dados.ano.length; a++) {
+      if (resposta.dados.ano[a].erro) {
+        __formatoArvore += 'A-->A' + a + '["Número"]\n';
+        __formatoArvore += 'A' + a + '-. X .->A' + a + 'E(("' + resposta.dados.ano[a].numero + '"))\n';
+        __formatoArvore += 'style A' + a + 'E color:#fff, fill:#f44336,stroke:#f44336\n';
+        __formatoArvore += 'A' + a + 'E-.->A' + a + 'AE["' + resposta.dados.ano[a].msg + '!!!"]\n';
+        __formatoArvore += 'style A' + a + 'AE color:#fff, fill:#f44336,stroke:#f44336\n';
+      } else {
+        __formatoArvore += 'A-->A' + a + '["Número"]\nA' + a + '-->aa' + a + '(("' + resposta.dados.ano[a].numero + '"))\n';
+      }
+    }
+
+    _arrayDados = __formatoArvore.split('\n');
+
+  }
+
+
+</script>
+</body>
+</html>
