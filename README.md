@@ -11,7 +11,7 @@
 ![jquery](https://img.shields.io/badge/jquery-3.3.1-oranges.svg)
 
 ### funcionamento
-Com a ferramenta em execução, abra o arquivo HTML (index.html) e defina uma data (e.g: 31/10/2019) e escolha o tempo para geração da árvore . Por exemplo:
+Abra o arquivo HTML (index.html) e defina uma data (e.g: 31/10/2019) e escolha o tempo para geração da árvore . Por exemplo:
 
 1. [Entrada] _data e tempo de execução_:
 
