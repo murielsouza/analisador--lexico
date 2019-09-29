@@ -29,4 +29,4 @@ Abra o arquivo HTML (index.html) e defina uma data (e.g: 31/10/2019) e escolha o
 
   ![](https://github.com/murielsouza/analisador-lexico/blob/henrique/saida.gif)
   
-  A aplicação gera um arquivo .json e utiliza para gerar a árvore de derivação da data definida. Se a data não for compátivel (inválidas, tokens desconhecidos e etc) árvore acusará o erro.
+  A aplicação gera um arquivo .json e utiliza para gerar a árvore de derivação da data definida, utilizando derivação mais a esquerda. Se a data não for compátivel (inválidas, tokens desconhecidos e etc) árvore acusará o erro.
